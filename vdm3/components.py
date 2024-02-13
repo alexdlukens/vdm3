@@ -48,7 +48,20 @@ def get_delta(cond_proba, val_1, val_2, norm=2):
 
     Returns: delta (float) - the delta value for this instance
     """
-    proba = np.array([abs(cond_proba[val_1][uni_x] - cond_proba[val_2][uni_x]) for uni_x in cond_proba[val_1].index])
+    query_unique_x = []
+    if val_1 in cond_proba:
+        
+        for uni_x in cond_proba[val_1].index:
+            try:
+                cond_prob_unique_x = abs(cond_proba[val_1][uni_x] - cond_proba[val_2][uni_x])
+            except KeyError:
+                cond_prob_unique_x = 0.0
+            query_unique_x.append(cond_prob_unique_x)
+
+    else:
+        query_unique_x = [0.0]
+
+    proba = np.array(query_unique_x)
     delta = (proba**norm).sum()
     return delta
 
